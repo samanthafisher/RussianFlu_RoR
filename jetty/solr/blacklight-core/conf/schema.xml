@@ -1,0 +1,69 @@
+<schema name="example" version="1.5">
+    <fields>   
+        <field name="_version_" type="long" indexed="true" stored="true" required="false"/>   
+	<field name="id" type="text_general" indexed="true" stored="true" required="true" multiValued="false" />
+	<field name="Newspaper_Title" type="texti" indexed="true" stored="true" required="false" multiValued="false" />
+        <field name="Infection_Location" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+	<field name="Infect_Lat_Long" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+	<field name="Reporting_Location" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+	<field name="Report_Lat_Long" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+        <field name="Date" type="date" indexed="true" stored="true" required="false" multiValued="false" />
+        <field name="Link" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+        <field name="Translation" type="text" indexed="true" stored="true" required="false" multiValued="false" />
+        <field name="Language" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+	<field name="Tags_Keywords" type="text" indexed="true" stored="true" required="false" multiValued="true" />
+        <field name="Image_Link" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+        <field name="Translator" type="string" indexed="true" stored="true" required="false" multiValued="false" />
+	<field name="collector" type="string" indexed="true" stored="false" multiValued="true"/>
+
+	<dynamicField name="*_facet" type="string" indexed="true" stored="false" multiValued="false"/>
+
+        <copyField source="Newspaper_Title" dest="collector"/>
+	<copyField source="Infection_Location" dest="collector"/>
+	<copyField source="Infect_Lat_Long" dest="collector"/>
+	<copyField source="Reporting_Location" dest="collector"/>
+	<copyField source="Report_Lat_Long" dest="collector"/>
+	<copyField source="Date" dest="collector"/>
+	<copyField source="Link" dest="collector"/>
+	<copyField source="Translation" dest="collector"/>
+	<copyField source="Language" dest="collector"/>
+	<copyField source="Tags_Keywords" dest="collector"/>
+	<copyField source="Image_Link" dest="collector"/>
+    </fields>
+    
+    <copyField source="*_facet" dest="collector"/>
+    <uniqueKey>id</uniqueKey>
+    <defaultSearchField>collector</defaultSearchField>
+    <solrQueryParser defaultOperator="OR"/>
+        
+    <types>
+        <fieldType name="string" class="solr.StrField" sortMissingLast="true" />
+<!--	<fieldType name="text_general" class="solr.TextField" sortMissingLast="true" />-->
+	<fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
+	 	 <analyzer type="query">
+    		<!--	<tokenizer class="solr.KeywordTokenizerFactory"/>-->
+			<tokenizer class="solr.PatternTokenizerFactory" pattern=";"/> 
+			<filter class ="solr.LowerCaseFilterFactory"/>
+  		</analyzer>
+	</fieldType>
+	<fieldType name="text" class="solr.TextField">
+    		<analyzer type="query">
+       			 <tokenizer class="solr.StandardTokenizerFactory"/>
+       			 <filter class="solr.LowerCaseFilterFactory"/>
+   		 </analyzer>
+	</fieldType>
+	<fieldType name ="texti" class="solr.TextField">
+		<analyzer type="query">
+               		<tokenizer class ="solr.KeywordTokenizerFactory"/>	 
+ 		        <filter class ="solr.LowerCaseFilterFactory"/>
+		</analyzer>		
+	</fieldType>
+	<fieldType name="date" class="solr.TrieDateField" precisionStep="0" positionIncrementGap="0"/>
+        <fieldType name="long" class="solr.TrieLongField" precisionStep="0" positionIncrementGap="0"/>
+        <fieldType name="text_en" class="solr.TextField" positionIncrementGap="100">
+            <!-- lots of details -->
+        </fieldType> 
+        <fieldType name="currency" class="solr.CurrencyField" precisionStep="8" defaultCurrency="USD" currencyConfig="currency.xml" />
+    </types>
+A
+</schema>
